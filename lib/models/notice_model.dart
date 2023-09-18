@@ -3,7 +3,7 @@ class NoticeModel {
   final String title;
   final String description;
   final String image;
-  final DateTime datePublic;
+  final DateTime datePublication;
   final DateTime? dateUpdade;
 
   NoticeModel({
@@ -11,9 +11,32 @@ class NoticeModel {
     required this.title,
     required this.description,
     required this.image,
-    required this.datePublic,
+    required this.datePublication,
     required this.dateUpdade,
   });
+
+  factory NoticeModel.fromJson(Map map) {
+    return NoticeModel(
+      id: map['id'] ?? 0,
+      title: map['title'],
+      description: map['description'],
+      image: map['image'],
+      datePublication:
+          DateTime.fromMicrosecondsSinceEpoch(map['datePublication']),
+      dateUpdade: map['dateUpdade'] != null
+          ? DateTime.fromMicrosecondsSinceEpoch(map['dateUpdade'])
+          : null,
+    );
+  }
+
+  Map toJson() {
+    return {
+      "id": id,
+      "title": title,
+      "description": description,
+      "image": image,
+    };
+  }
 
   @override
   String toString() {
@@ -23,7 +46,7 @@ class NoticeModel {
           title: $title,
           description: $description,
           image: $image,
-          datePublic: $datePublic,
+          datePublication: $datePublication,
           dateUpdade: $dateUpdade,
         })
       """;

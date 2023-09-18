@@ -1,29 +1,45 @@
+import 'dart:convert';
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:test_backend/models/notice_model.dart';
+import 'package:test_backend/services/generic_service.dart';
 
 class BlogApi {
-  static Handler handler() {
+  final GenericService<NoticeModel> _service;
+
+  BlogApi(this._service);
+
+  Handler get handler {
     Router router = Router();
 
-    router.get('/blog/noticia', (Request request) {
-      return Response.ok('Noticias');
+    router.get('/blog/noticias', (Request request) {
+      final notices = _service.findAll();
+      List<Map> noticesMap = notices.map((e) => e.toJson()).toList();
+      return Response.ok(
+        jsonEncode(noticesMap),
+      );
     });
 
-    router.post('/blog/noticia', (Request request) {
-      return Response.ok('Noticia adicionada');
+    router.post('/blog/noticias', (Request request) async {
+      final bodyJson = await request.readAsString();
+      _service.save(NoticeModel.fromJson(jsonDecode(bodyJson)));
+      return Response(201);
     });
 
     ///QueryParams = [id]
-    router.put('/blog/noticia', (Request request) {
+    router.put('/blog/noticias', (Request request) {
       String? id = request.url.queryParameters['id'];
       if (id == null) return Response.notFound('Noticia nao encontrada');
+      // _service.save('');
       return Response.ok('Noticia atualizada');
     });
 
     ///QueryParams = [id]
-    router.delete('/blog/noticia', (Request request) {
+    router.delete('/blog/noticias', (Request request) {
       String? id = request.url.queryParameters['id'];
       if (id == null) return Response.notFound('Noticia nao encontrada');
+      _service.delete(1);
       return Response.ok('Noticia deletada');
     });
 
