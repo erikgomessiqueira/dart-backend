@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:test_backend/infra/security/security_service.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:test_backend/infra/security/validate/api_router_validate.dart';
 import 'package:test_backend/utils/custom_env.dart';
 
 class SecurityServiceImpl implements SecurityService<JWT> {
@@ -64,13 +63,6 @@ class SecurityServiceImpl implements SecurityService<JWT> {
   @override
   Middleware get verifyJwt => createMiddleware(
         requestHandler: (Request req) {
-          ApiRouterValidate _apiSecurity = ApiRouterValidate()
-              .add('login')
-              .add('xpto')
-              .add('register')
-              .add('teste');
-
-          if (_apiSecurity.isPublic(req.url.path)) return null;
           if (req.context['jwt'] == null) {
             return Response.forbidden(
               jsonEncode({

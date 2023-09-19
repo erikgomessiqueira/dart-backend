@@ -11,7 +11,7 @@ class LoginApi extends Api {
   LoginApi(this._securityService);
 
   @override
-  Handler getHendler({List<Middleware>? middlewares}) {
+  Handler getHendler({List<Middleware>? middlewares, bool isSecurity = false}) {
     Router router = Router();
     router.post('/login', (Request request) async {
       final token = await _securityService.generateJWT('01');

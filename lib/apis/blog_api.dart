@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+import 'package:test_backend/apis/api.dart';
 import 'package:test_backend/models/notice_model.dart';
 import 'package:test_backend/services/generic_service.dart';
 
-class BlogApi {
+class BlogApi extends Api {
   final GenericService<NoticeModel> _service;
 
-  BlogApi(this._service);
+  BlogApi(
+    this._service,
+  );
 
-  Handler get handler {
+  @override
+  Handler getHendler({List<Middleware>? middlewares, bool isSecurity = false}) {
     Router router = Router();
 
     router.get('/blog/noticias', (Request request) {
@@ -43,6 +47,10 @@ class BlogApi {
       return Response.ok('Noticia deletada');
     });
 
-    return router;
+    return createHandler(
+      router: router,
+      middlewares: middlewares,
+      isSecurity: isSecurity,
+    );
   }
 }
