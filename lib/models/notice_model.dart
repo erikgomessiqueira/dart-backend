@@ -1,54 +1,52 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 class NoticeModel {
-  final int id;
-  final String title;
-  final String description;
-  final String image;
-  final DateTime datePublication;
-  final DateTime? dateUpdade;
+  int? id;
+  String? title;
+  String? description;
+  DateTime? dtCreate;
+  DateTime? dtUpdate;
+  int? userId;
 
-  NoticeModel({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.image,
-    required this.datePublication,
-    required this.dateUpdade,
-  });
+  NoticeModel();
 
-  factory NoticeModel.fromJson(Map map) {
-    return NoticeModel(
-      id: map['id'] ?? 0,
-      title: map['title'],
-      description: map['description'],
-      image: map['image'],
-      datePublication:
-          DateTime.fromMicrosecondsSinceEpoch(map['datePublication']),
-      dateUpdade: map['dateUpdade'] != null
-          ? DateTime.fromMicrosecondsSinceEpoch(map['dateUpdade'])
-          : null,
-    );
+  factory NoticeModel.fromMap(Map map) {
+    return NoticeModel()
+      ..id = map['id']
+      ..title = map['titulo']
+      ..description = map['descricao'].toString()
+      ..dtCreate = map['dt_criacao']
+      ..dtUpdate = map['dt_autalizacao']
+      ..userId = map['id_usuario'];
+  }
+
+  factory NoticeModel.fromRequest(map) {
+    return NoticeModel()
+      ..id = map['id']
+      ..title = map['title']
+      ..description = map['description']
+      ..userId = map['userId'];
   }
 
   Map toJson() {
     return {
-      "id": id,
-      "title": title,
-      "description": description,
-      "image": image,
+      'id': id,
+      'title': title,
+      'description': description,
     };
   }
 
   @override
   String toString() {
-    return """
-      NoticeModel({
-          id: $id,
-          title: $title,
-          description: $description,
-          image: $image,
-          datePublication: $datePublication,
-          dateUpdade: $dateUpdade,
-        })
-      """;
+    return '''
+      NoticeModel(
+        id: $id, 
+        title: $title, 
+        description: $description, 
+        dtCreate: $dtCreate, 
+        dtUpdate: $dtUpdate, 
+        userId: $userId,
+      )''';
   }
 }

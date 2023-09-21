@@ -8,39 +8,50 @@ class UserDAO implements DAO<UserModel> {
   UserDAO(this._dbConfiguration);
 
   @override
-  Future create(UserModel value) async {
-    // TODO: implement create
-    throw UnimplementedError();
+  Future<bool> create(UserModel value) async {
+    final Results results = await _dbConfiguration.execQuery(
+      'INSERT INTO usuarios( nome, email, password) VALUES (?, ?, ?)',
+      [value.name, value.email, value.password],
+    );
+    return results.affectedRows != null && results.affectedRows! > 0;
   }
 
   @override
-  Future delete(int id) async {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<bool> delete(int id) async {
+    final Results results = await _dbConfiguration
+        .execQuery('DELETE FROM usuarios where id= ? ', [id]);
+    return results.affectedRows != null && results.affectedRows! > 0;
   }
 
   @override
   Future<List<UserModel>> findAll() async {
-    final String sql = 'SELECT * FROM usuarios';
-    final connection = await _dbConfiguration.connection;
-    final Results results = await connection.query(sql);
-    return results.map((e) => UserModel.fromMap(e.fields)).toList();
+    final Results results =
+        await _dbConfiguration.execQuery('SELECT * FROM usuarios');
+    return results
+        .map((e) => UserModel.fromMap(e.fields))
+        .toList()
+        .cast<UserModel>();
   }
 
   @override
-  Future<UserModel> findOne(int id) async {
-    final String sql = 'SELECT * FROM usuarios WHERE id = ?';
-    final connection = await _dbConfiguration.connection;
-    final Results results = await connection.query(sql, [id]);
-    if (results.isEmpty) {
-      throw Exception('[ERRO_DB] -> findOne for id: $id, not found');
-    }
-    return UserModel.fromMap(results.first.fields);
+  Future<UserModel?> findOne(int id) async {
+    final Results results = await _dbConfiguration
+        .execQuery('SELECT * FROM usuarios WHERE id = ?', [id]);
+    return results.isEmpty ? null : UserModel.fromMap(results.first.fields);
   }
 
   @override
-  Future update(UserModel value) async {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<bool> update(UserModel user) async {
+    final Results results = await _dbConfiguration.execQuery(
+      'UPDATE usuarios SET nome = ?, password = ? WHERE id = ?;',
+      [user.name, user.password, user.id],
+    );
+    return results.affectedRows != null && results.affectedRows! > 0;
+  }
+
+  Future<UserModel?> findByEmail(String email) async {
+    final Results results = await _dbConfiguration
+        .execQuery('SELECT * FROM usuarios WHERE email = ?', [email]);
+    return results.isEmpty ? null : UserModel.fromEmail(results.first.fields);
   }
 }

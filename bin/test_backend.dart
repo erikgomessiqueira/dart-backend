@@ -1,9 +1,9 @@
+import 'package:password_dart/password_dart.dart';
 import 'package:shelf/shelf.dart';
-import 'package:test_backend/apis/blog_api.dart';
+import 'package:test_backend/apis/notices_api.dart';
 import 'package:test_backend/apis/login_api.dart';
-import 'package:test_backend/dao/user_dao.dart';
+import 'package:test_backend/apis/user_api.dart';
 import 'package:test_backend/infra/custom_server.dart';
-import 'package:test_backend/infra/database/db_configuration.dart';
 import 'package:test_backend/infra/dependency_injector/injects.dart';
 import 'package:test_backend/infra/middleware_interception.dart';
 import 'package:test_backend/utils/custom_env.dart';
@@ -13,12 +13,10 @@ void main() async {
 
   final di = Injects.initialize();
 
-  final dbConfiguration = await di<DBConfiguration>();
-  final _userDAO = UserDAO(dbConfiguration);
-
   final cascadeHandlers = Cascade()
       .add(di.get<LoginApi>().getHendler())
-      .add(di.get<BlogApi>().getHendler(isSecurity: true))
+      .add(di.get<UserApi>().getHendler(isSecurity: true))
+      .add(di.get<NoticesApi>().getHendler(isSecurity: true))
       .handler;
 
   final handler = Pipeline()
