@@ -1,4 +1,3 @@
-import 'package:password_dart/password_dart.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test_backend/apis/notices_api.dart';
 import 'package:test_backend/apis/login_api.dart';
@@ -15,13 +14,14 @@ void main() async {
 
   final cascadeHandlers = Cascade()
       .add(di.get<LoginApi>().getHendler())
+      .add(di.get<NoticesApi>().getHendler(isSecurity: false))
       .add(di.get<UserApi>().getHendler(isSecurity: true))
-      .add(di.get<NoticesApi>().getHendler(isSecurity: true))
       .handler;
 
   final handler = Pipeline()
       .addMiddleware(logRequests())
-      .addMiddleware(MiddleInterception().middleware)
+      .addMiddleware(MInterception.contentTypeJson)
+      .addMiddleware(MInterception.cors)
       .addHandler(cascadeHandlers);
 
   await CustomServer.initialize(

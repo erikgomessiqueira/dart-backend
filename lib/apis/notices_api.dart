@@ -17,6 +17,14 @@ class NoticesApi extends Api {
   Handler getHendler({List<Middleware>? middlewares, bool isSecurity = false}) {
     Router router = Router();
 
+    router.get('/noticia', (Request request) async {
+      String? id = request.url.queryParameters['id'];
+      if (id == null) return Response.badRequest();
+      final notice = await _service.findOne(int.parse(id));
+      if (notice == null) return Response(404);
+      return Response.ok(jsonEncode(notice));
+    });
+
     router.get('/noticias', (Request request) async {
       final notices = await _service.findAll();
       List<Map> noticesMap = notices.map((e) => e.toJson()).toList();
