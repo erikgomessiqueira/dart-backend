@@ -14,14 +14,14 @@ class SecurityServiceImpl implements SecurityService<JWT> {
       'roules': ['admin', 'user']
     });
 
-    String key = await CustomEnv.get('jwtKey');
+    String key = 'DartSecretKey'; //await CustomEnv.get('jwtKey');
     String token = jwt.sign(SecretKey(key));
     return token;
   }
 
   @override
   validateJWT(String token) async {
-    String key = await CustomEnv.get('jwtKey');
+    String key = 'DartSecretKey'; // await CustomEnv.get('jwtKey');
 
     try {
       return JWT.verify(token, SecretKey(key));

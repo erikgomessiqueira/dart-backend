@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:shelf/shelf.dart';
 import 'package:test_backend/apis/notices_api.dart';
 import 'package:test_backend/apis/login_api.dart';
@@ -8,7 +10,7 @@ import 'package:test_backend/infra/middleware_interception.dart';
 import 'package:test_backend/utils/custom_env.dart';
 
 void main() async {
-  CustomEnv.fromFile('.env');
+  // CustomEnv.fromFile('.env');
 
   final di = Injects.initialize();
 
@@ -26,7 +28,7 @@ void main() async {
 
   await CustomServer.initialize(
     handler: handler,
-    address: await CustomEnv.get<String>('serverAddress'),
-    port: await CustomEnv.get<int>('serverPort'),
+    address: '127.0.0.1', //await CustomEnv.get<String>('serverAddress'),
+    port: 8080, //await CustomEnv.get<int>('serverPort'),
   );
 }

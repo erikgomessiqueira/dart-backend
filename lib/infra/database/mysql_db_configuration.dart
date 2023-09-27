@@ -18,11 +18,11 @@ class MySqlDBConfiguration implements DBConfiguration {
   @override
   Future<MySqlConnection> createConection() async {
     return MySqlConnection.connect(ConnectionSettings(
-      host: await CustomEnv.get<String>('dbHost'),
-      port: await CustomEnv.get<int>('dbPort'),
-      user: await CustomEnv.get<String>('dbUser'),
-      password: await CustomEnv.get<String>('dbPassword'),
-      db: await CustomEnv.get<String>('dbSchema'),
+      host: '127.0.0.1', //await CustomEnv.get<String>('dbHost'),
+      port: 3306, //await CustomEnv.get<int>('dbPort'),
+      user: 'dart_user', //await CustomEnv.get<String>('dbUser'),
+      password: 'dart_pass', //await CustomEnv.get<String>('dbPassword'),
+      db: 'dart', //await CustomEnv.get<String>('dbSchema'),
     ));
   }
 
